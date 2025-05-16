@@ -1,6 +1,9 @@
 @csrf
 {!! $MODAL_ORDER_DETAIL !!}
 <div class="box-dashboard">
+<div class="row">
+        <div class="title">Đơn hàng</div>
+    </div>
     <table id="order-manager" class="table-datatables ui celled table">
         <thead>
             <tr>

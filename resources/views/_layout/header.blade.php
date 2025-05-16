@@ -8,6 +8,7 @@
             <button type="submit"><i class="fa fa-search"></i></button>
         </form>
         <div class="box">
+            <a href="{{ route('dashboard.orders') }}"><i class="fa fa-shopping-cart"></i></a>
             @if ($LOGGED)
                 <a href="{{ route('dashboard.info') }}"><i class="fa fa-user"></i></a>
             @else

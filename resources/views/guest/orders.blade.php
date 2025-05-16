@@ -57,6 +57,6 @@
         <i id="into_money">{{ number_format($TOTAL_DISCOUNT) }}đ</i>
     </div>
     <div class="row">
-        <div class="center"><button class="btn btn-green" id="btn-order-closing">Đặt hàng</button></div>
+        <div class="center"><button class="btn btn-green" id="btn-show-payment-options">Đặt hàng</button></div>
     </div>
 </div>

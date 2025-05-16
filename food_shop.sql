@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.0
+-- version 5.2.2
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Feb 06, 2025 at 06:46 AM
--- Server version: 8.0.30
--- PHP Version: 8.2.26
+-- Generation Time: May 08, 2025 at 10:13 AM
+-- Server version: 8.4.3
+-- PHP Version: 8.3.16
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -29,14 +29,14 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `accounts` (
   `id` bigint UNSIGNED NOT NULL,
-  `username` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `password` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `phone` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `address` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `token` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `locked` enum('0','1') COLLATE utf8mb4_unicode_ci DEFAULT '0',
-  `role` enum('admin','guest','shipper') COLLATE utf8mb4_unicode_ci DEFAULT 'guest',
+  `username` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `password` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `phone` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `address` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `token` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `locked` enum('0','1') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT '0',
+  `role` enum('admin','guest','shipper') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT 'guest',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -47,8 +47,8 @@ CREATE TABLE `accounts` (
 
 INSERT INTO `accounts` (`id`, `username`, `password`, `name`, `phone`, `address`, `token`, `locked`, `role`, `created_at`, `updated_at`) VALUES
 (1, 'admin', '$2y$10$Nl0IqopilF6cxZ1auaHZE.8K.tGIeeNHOZkqYC8iXi5v4LWGA5y/O', 'Admin', '0123456789', 'Yên Nghĩa, Hà Đông, Hà Nội', 'XQzERLrp4mNqReNbrtpMmLbBYzCW0u22dvw1mmD7uSLTBGq84U', '0', 'admin', '2025-02-06 06:43:02', '2025-02-06 06:44:29'),
-(2, 'shipper', '$2y$10$YYdU9jnJ9qEOt6lDDu8YpOgsjON15WgUc8L60y8mhnZSBmfaIgSJe', 'Shipper', '0123456789', 'Yên Nghĩa, Hà Đông, Hà Nội', 'rpsN3MQgcxAcuht7SFzi3zAa5z7kGFALk3VNZukbTMZsUd7vee', '0', 'shipper', '2025-02-06 06:43:02', '2025-02-06 06:43:02'),
-(3, 'user', '$2y$10$mwq1BRpgI8BFJeHstm3ahul41u0Se8IwXft.vHJKwpJI9F0EuG2VO', 'Khách hàng', '0123456789', 'Yên Nghĩa, Hà Đông, Hà Nội', 'GBxVhlYbTiXcH0mdDefUC17NQ3ZTssANraIg2X1Lc8XMwP8TKh', '0', 'guest', '2025-02-06 06:43:02', '2025-02-06 06:43:02');
+(2, 'shipper', '$2y$10$YYdU9jnJ9qEOt6lDDu8YpOgsjON15WgUc8L60y8mhnZSBmfaIgSJe', 'Shipper', '0123456789', 'Yên Nghĩa, Hà Đông, Hà Nội', 'rpsN3MQgcxAcuht7SFzi3zAa5z7kGFALk3VNZukbTMZsUd7vee', '0', 'shipper', '2025-02-06 06:43:02', '2025-05-08 10:10:58'),
+(3, 'user', '$2y$10$mwq1BRpgI8BFJeHstm3ahul41u0Se8IwXft.vHJKwpJI9F0EuG2VO', 'Khách hàng', '0123456789', 'Yên Nghĩa, Hà Đông, Hà Nội', 'GBxVhlYbTiXcH0mdDefUC17NQ3ZTssANraIg2X1Lc8XMwP8TKh', '0', 'guest', '2025-02-06 06:43:02', '2025-05-08 10:10:42');
 
 -- --------------------------------------------------------
 
@@ -58,8 +58,8 @@ INSERT INTO `accounts` (`id`, `username`, `password`, `name`, `phone`, `address`
 
 CREATE TABLE `categories` (
   `id` bigint UNSIGNED NOT NULL,
-  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `slug` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `slug` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -86,8 +86,8 @@ INSERT INTO `categories` (`id`, `name`, `slug`, `created_at`, `updated_at`) VALU
 
 CREATE TABLE `discounts` (
   `id` bigint UNSIGNED NOT NULL,
-  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `code` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `code` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `start_at` timestamp NULL DEFAULT NULL,
   `end_at` timestamp NULL DEFAULT NULL,
   `percent` int DEFAULT '0',
@@ -100,7 +100,7 @@ CREATE TABLE `discounts` (
 --
 
 INSERT INTO `discounts` (`id`, `name`, `code`, `start_at`, `end_at`, `percent`, `created_at`, `updated_at`) VALUES
-(1, 'Giảm giá 10%', 'giam10', '2024-12-31 17:00:00', '2025-01-30 16:59:59', 10, '2025-02-06 06:43:02', '2025-02-06 06:43:02');
+(1, 'Giảm giá 10%', 'giam10', '2024-12-31 17:00:00', '2025-06-30 16:59:59', 10, '2025-02-06 06:43:02', '2025-02-06 06:43:02');
 
 -- --------------------------------------------------------
 
@@ -110,7 +110,7 @@ INSERT INTO `discounts` (`id`, `name`, `code`, `start_at`, `end_at`, `percent`, 
 
 CREATE TABLE `migrations` (
   `id` int UNSIGNED NOT NULL,
-  `migration` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `migration` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `batch` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -125,7 +125,8 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (4, '2025_01_26_062316_create_products_table', 1),
 (5, '2025_01_26_062357_create_discounts_table', 1),
 (6, '2025_01_26_172503_create_order_table', 1),
-(7, '2025_01_26_172913_create_order_product_table', 1);
+(7, '2025_01_26_172913_create_order_product_table', 1),
+(8, '2023_11_25_000007_add_payment_method_to_orders_table', 2);
 
 -- --------------------------------------------------------
 
@@ -135,18 +136,27 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 
 CREATE TABLE `orders` (
   `id` bigint UNSIGNED NOT NULL,
-  `note` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `note` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `account_id` bigint UNSIGNED DEFAULT NULL,
   `shipper_id` bigint UNSIGNED DEFAULT NULL,
   `discount_id` bigint UNSIGNED DEFAULT NULL,
-  `discount_name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `discount_code` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `discount_percent` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `pay` enum('unpaid','paid') COLLATE utf8mb4_unicode_ci DEFAULT 'unpaid',
-  `status` enum('cart','wait','shipping','complete','cancel') COLLATE utf8mb4_unicode_ci DEFAULT 'cart',
+  `discount_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `discount_code` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `discount_percent` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `pay` enum('unpaid','paid') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT 'unpaid',
+  `payment_method` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'direct',
+  `status` enum('cart','wait','shipping','complete','cancel') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT 'cart',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `orders`
+--
+
+INSERT INTO `orders` (`id`, `note`, `account_id`, `shipper_id`, `discount_id`, `discount_name`, `discount_code`, `discount_percent`, `pay`, `payment_method`, `status`, `created_at`, `updated_at`) VALUES
+(8, 'Sản phẩm ngon', 3, 2, NULL, NULL, NULL, NULL, 'paid', 'vnpay', 'complete', '2025-05-07 19:53:19', '2025-05-07 20:23:50'),
+(9, 'Đồ ăn ngon', 3, 2, 1, 'Giảm giá 10%', 'giam10', '10', 'unpaid', 'direct', 'complete', '2025-05-07 20:13:03', '2025-05-07 20:24:16');
 
 -- --------------------------------------------------------
 
@@ -158,15 +168,23 @@ CREATE TABLE `order_product` (
   `id` bigint UNSIGNED NOT NULL,
   `order_id` bigint UNSIGNED DEFAULT NULL,
   `product_id` bigint UNSIGNED DEFAULT NULL,
-  `name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `description` text COLLATE utf8mb4_unicode_ci,
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
   `price` int DEFAULT NULL,
-  `avatar` text COLLATE utf8mb4_unicode_ci,
+  `avatar` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
   `quantity` int NOT NULL,
   `vote` double(8,2) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `order_product`
+--
+
+INSERT INTO `order_product` (`id`, `order_id`, `product_id`, `name`, `description`, `price`, `avatar`, `quantity`, `vote`, `created_at`, `updated_at`) VALUES
+(10, 8, 23, 'Cà Phê Sữa Đá', 'Cà Phê Sữa Đá với cà phê thơm ngon, sữa ngọt, ăn kèm đá xay, hòa quyện với nhau tạo nên một món ăn vô cùng hấp dẫn và lạ miệng.', 20000, 'Food/23.png', 1, 4.00, '2025-05-07 19:53:19', '2025-05-07 20:23:50'),
+(11, 9, 23, 'Cà Phê Sữa Đá', 'Cà Phê Sữa Đá với cà phê thơm ngon, sữa ngọt, ăn kèm đá xay, hòa quyện với nhau tạo nên một món ăn vô cùng hấp dẫn và lạ miệng.', 20000, 'Food/23.png', 1, 5.00, '2025-05-07 20:13:03', '2025-05-07 20:24:16');
 
 -- --------------------------------------------------------
 
@@ -176,11 +194,11 @@ CREATE TABLE `order_product` (
 
 CREATE TABLE `personal_access_tokens` (
   `id` bigint UNSIGNED NOT NULL,
-  `tokenable_type` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `tokenable_type` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `tokenable_id` bigint UNSIGNED NOT NULL,
-  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `token` varchar(64) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `abilities` text COLLATE utf8mb4_unicode_ci,
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `token` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `abilities` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
   `last_used_at` timestamp NULL DEFAULT NULL,
   `expires_at` timestamp NULL DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
@@ -195,12 +213,12 @@ CREATE TABLE `personal_access_tokens` (
 
 CREATE TABLE `products` (
   `id` bigint UNSIGNED NOT NULL,
-  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `description` text COLLATE utf8mb4_unicode_ci,
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
   `price` int NOT NULL,
   `category_id` bigint UNSIGNED DEFAULT NULL,
-  `avatar` text COLLATE utf8mb4_unicode_ci,
-  `slug` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `avatar` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+  `slug` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -321,19 +339,19 @@ ALTER TABLE `discounts`
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `order_product`
 --
 ALTER TABLE `order_product`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT for table `personal_access_tokens`

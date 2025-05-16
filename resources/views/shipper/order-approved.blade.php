@@ -1,7 +1,7 @@
 @csrf
 {!! $MODAL_ORDER_DETAIL !!}
 @if ($PRODUCTS_RECEIVED != [])
-    <div class="box-dashboard">
+    <div class="box-dashboard" data-shipper="true" data-status="complete">
         <div class="row">
             <div class="title">Đơn hàng đã nhận</div>
             <button class="btn btn-green" id="btn-order-complete">Hoàn thành đơn hàng</button>
@@ -32,7 +32,7 @@
         </table>
     </div>
 @else
-    <div class="box-dashboard">
+    <div class="box-dashboard" data-shipper="true">
         <table id="order-approved" class="table-datatables ui celled table">
             <thead>
                 <tr>

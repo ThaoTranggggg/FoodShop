@@ -259,10 +259,13 @@ class OrderController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'product_id' => 'required|integer|exists:products,id',
+            'quantity' => 'integer|min:1',
         ], [
             'product_id.required' => 'Vui lòng chọn sản phẩm',
             'product_id.integer' => 'Sản phẩm không hợp lệ',
             'product_id.exists' => 'Sản phẩm không tồn tại',
+            'quantity.integer' => 'Số lượng không hợp lệ',
+            'quantity.min' => 'Số lượng phải lớn hơn 0',
         ]);
 
         if ($validator->fails()) {
@@ -301,10 +304,15 @@ class OrderController extends Controller
         $orderProduct->description = $product->description;
         $orderProduct->price = $product->price;
         $orderProduct->avatar = $product->avatar;
-        $orderProduct->quantity = 1;
+        $orderProduct->quantity = $request->quantity ?? 1; // Sử dụng số lượng từ request hoặc mặc định là 1
         $orderProduct->save();
 
-        return $this->res(true, 'Thêm sản phẩm vào giỏ hàng thành công');
+        // Lấy số lượng sản phẩm trong giỏ hàng
+        $count = OrderProductModel::where('order_id', $order->id)->count();
+
+        return $this->res(true, 'Thêm sản phẩm vào giỏ hàng thành công', [
+            'count' => $count
+        ]);
     }
 
     public function API_update_count_product(Request $request)
@@ -540,13 +548,23 @@ class OrderController extends Controller
             return $this->res(false, 'Bạn đang có đơn hàng đang chờ xử lý');
         }
 
-        // Chuyển giỏ hàng thành đơn hàng chờ xử lý
-        $order->status = 'wait';
-        $order->updated_at = date('Y-m-d H:i:s');
-        $order->pay = 'paid';
-        $order->save();
+        // Check payment method
+        $paymentMethod = $request->payment_method ?? 'direct';
+        
+        // If payment is direct, update order status
+        if ($paymentMethod === 'direct') {
+            // Chuyển giỏ hàng thành đơn hàng chờ xử lý
+            $order->status = 'wait';
+            $order->updated_at = date('Y-m-d H:i:s');
+            $order->pay = 'unpaid';
+            $order->payment_method = $paymentMethod;
+            $order->save();
 
-        return $this->res(true, 'Đặt hàng thành công');
+            return $this->res(true, 'Đặt hàng thành công');
+        }
+        
+        // If payment is VNPAY, return error - use VNPAY controller instead
+        return $this->res(false, 'Phương thức thanh toán không hợp lệ');
     }
 
     public function API_get_order_detail(Request $request)
@@ -787,6 +805,8 @@ class OrderController extends Controller
             return 'Đã hoàn thành';
         if ($status == 'cancel')
             return 'Đã hủy';
+            
+        return 'Không xác định'; // Default return for any unhandled status
     }
 
     protected function deliveryTime($time): int

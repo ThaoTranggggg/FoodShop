@@ -39,7 +39,7 @@ class Controller extends BaseController
         $logged = Auth::check();
 
         $data = array_merge($data, [
-            'SHOW_DETAIL' => view('component.productDetail'),
+            'SHOW_DETAIL' => "",
             'HEADER' => view('_layout.header', [
                 'LOGO' => env('SHOP_LOGO'),
                 'TITLE' => env('SHOP_TITLE'),

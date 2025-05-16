@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInita01d122284aaf7f88e6ac91fd561f079
+class ComposerStaticInitcd5c89a1026cbc3ac930f4c22e9b2948
 {
     public static $files = array (
         '6e3fae29631ef280660b3cdad06f25a8' => __DIR__ . '/..' . '/symfony/deprecation-contracts/function.php',
@@ -567,6 +567,7 @@ class ComposerStaticInita01d122284aaf7f88e6ac91fd561f079
         'App\\Http\\Controllers\\HomeController' => __DIR__ . '/../..' . '/app/Http/Controllers/HomeController.php',
         'App\\Http\\Controllers\\OrderController' => __DIR__ . '/../..' . '/app/Http/Controllers/OrderController.php',
         'App\\Http\\Controllers\\ProductController' => __DIR__ . '/../..' . '/app/Http/Controllers/ProductController.php',
+        'App\\Http\\Controllers\\VNPayController' => __DIR__ . '/../..' . '/app/Http/Controllers/VNPayController.php',
         'App\\Http\\Kernel' => __DIR__ . '/../..' . '/app/Http/Kernel.php',
         'App\\Http\\Middleware\\Authenticate' => __DIR__ . '/../..' . '/app/Http/Middleware/Authenticate.php',
         'App\\Http\\Middleware\\EncryptCookies' => __DIR__ . '/../..' . '/app/Http/Middleware/EncryptCookies.php',
@@ -6483,9 +6484,9 @@ class ComposerStaticInita01d122284aaf7f88e6ac91fd561f079
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInita01d122284aaf7f88e6ac91fd561f079::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInita01d122284aaf7f88e6ac91fd561f079::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInita01d122284aaf7f88e6ac91fd561f079::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInitcd5c89a1026cbc3ac930f4c22e9b2948::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInitcd5c89a1026cbc3ac930f4c22e9b2948::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInitcd5c89a1026cbc3ac930f4c22e9b2948::$classMap;
 
         }, null, ClassLoader::class);
     }

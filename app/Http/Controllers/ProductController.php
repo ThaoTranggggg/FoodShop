@@ -52,6 +52,86 @@ class ProductController extends Controller
         return $this->loadLayout($page);
     }
 
+    public function detail($slug)
+    {
+        $product = ProductModel::where('slug', $slug)->first();
+        
+        if (!$product) {
+            return redirect()->route('home');
+        }
+        
+        // Format price
+        $product->priceFormatted = number_format($product->price, 0, ',', '.');
+        
+        // Get reviews with eager loading of relationships
+        $reviews = OrderProductModel::where('product_id', $product->id)
+                                    ->where('vote', '!=', null)
+                                    ->with(['order.account']) // Eager load order and account
+                                    ->get();
+        
+        $total = $reviews->count();
+        if ($total != 0) {
+            $sum = 0;
+            foreach ($reviews as $review) {
+                $sum += $review->vote;
+            }
+            $ratio = $sum / $total;
+
+            $product->ratio = $ratio;
+            $product->total = $total;
+        } else {
+            $product->ratio = 0;
+            $product->total = 0;
+        }
+        
+        // Get related products from same category
+        $relatedProducts = ProductModel::where('category_id', $product->category_id)
+                                      ->where('id', '!=', $product->id)
+                                      ->limit(4)
+                                      ->get();
+        
+        foreach ($relatedProducts as $relatedProduct) {
+            $relatedProduct->priceFormatted = number_format($relatedProduct->price, 0, ',', '.');
+            
+            $reviewsRelated = OrderProductModel::where('product_id', $relatedProduct->id)
+                                             ->where('vote', '!=', null)
+                                             ->get();
+            
+            $totalRelated = $reviewsRelated->count();
+            if ($totalRelated != 0) {
+                $sumRelated = 0;
+                foreach ($reviewsRelated as $reviewRelated) {
+                    $sumRelated += $reviewRelated->vote;
+                }
+                $ratioRelated = $sumRelated / $totalRelated;
+
+                $relatedProduct->ratio = $ratioRelated;
+                $relatedProduct->total = $totalRelated;
+            } else {
+                $relatedProduct->ratio = 0;
+                $relatedProduct->total = 0;
+            }
+        }
+        
+        // Get category name
+        $category = CategoryModel::find($product->category_id);
+        
+        // Check if there are reviews that really have note data
+        $hasReviews = $reviews->filter(function($review) {
+            return !empty($review->order) && !empty($review->order->account) && (!empty($review->note) || !empty($review->vote));
+        })->count() > 0;
+        
+        $page = view('pages/product-detail', [
+            'PRODUCT' => $product,
+            'CATEGORY' => $category,
+            'REVIEWS' => $reviews,
+            'HAS_REVIEWS' => $hasReviews,
+            'RELATED_PRODUCTS' => $relatedProducts,
+        ]);
+
+        return $this->loadLayout($page);
+    }
+
     public function product_manager()
     {
         $products = ProductModel::join('categories', 'products.category_id', '=', 'categories.id')

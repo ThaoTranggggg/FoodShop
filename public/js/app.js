@@ -10,30 +10,6 @@ $(document).ready(function () {
         dots: false,
     });
 
-    $(document).on("click", "#close-product-detail", function () {
-        const e_Box = $(this).closest(".show-product-detail");
-        // Add class hide
-        e_Box.addClass("hide");
-    });
-
-    $(document).on("click", ".cart-product>.image", function () {
-        const e_Box = $(this).closest(".cart-product");
-        const avatar = e_Box.find("img").attr("src");
-        const name = e_Box.find(".name").text();
-        const price = e_Box.find(".price").text();
-        const description = e_Box.find(".description").text();
-
-        // Set data
-        const e_Box_Detail = $(".show-product-detail");
-        e_Box_Detail.find("img").attr("src", avatar);
-        e_Box_Detail.find(".name").text(name);
-        e_Box_Detail.find(".price").text("Giá: " + price);
-        e_Box_Detail.find(".description").text(description);
-
-        // Remove class hide
-        e_Box_Detail.removeClass("hide");
-    });
-
     $(document).on("click", "#btn-login", function (event) {
         event.preventDefault();
 
@@ -750,9 +726,9 @@ $(document).ready(function () {
                     showCancelButton: false,
                 }).then(function () {
                     const newData = [
-                        id,
-                        name,
-                        slug,
+                        response.data.id,
+                        response.data.name,
+                        response.data.slug,
                         $("#category-manager")
                             .DataTable()
                             .row(
@@ -1378,39 +1354,14 @@ $(document).ready(function () {
 
     $(document).on("click", "#btn-add-product-to-cart", function () {
         const id = $(this).attr("data-id");
+        
+        // Nếu đang ở trang chi tiết sản phẩm thì sẽ không thực hiện hàm này
+        // vì trang chi tiết sẽ sử dụng hàm toàn cục addProductToCart
+        if ($(this).hasClass('btn-add-to-cart')) {
+            return;
+        }
 
-        openLoading();
-        $.ajax({
-            url: baseURL + "dashboard/orders",
-            type: "POST",
-            data: {
-                product_id: id,
-            },
-            headers: {
-                "X-CSRF-TOKEN": $('input[name="_token"]').val(),
-            },
-            success: function (response) {
-                closeLoading();
-                if (!response.status) {
-                    swal({
-                        title: "Thông báo",
-                        text: response.message,
-                        icon: "warning",
-                        showCancelButton: false,
-                    });
-                    return;
-                }
-
-                swal({
-                    title: "Thông báo",
-                    text: response.message,
-                    icon: "success",
-                    showCancelButton: false,
-                }).then(function () {
-                    $("#cart-count").html(response.data.count);
-                });
-            },
-        });
+        addProductToCart(id, 1);
     });
 
     $(document).on("click", "#down-count-product", function () {
@@ -1616,7 +1567,8 @@ $(document).ready(function () {
         });
     });
 
-    $(document).on("click", "#btn-order-closing", function () {
+    // Show payment options modal
+    $(document).on("click", "#btn-show-payment-options", function () {
         // Nếu bảng orders-guest không có dữ liệu thì không cho đặt hàng
         if ($("#orders-guest").DataTable().data().count() == 0) {
             swal({
@@ -1629,72 +1581,92 @@ $(document).ready(function () {
         }
 
         openModal("modal-order-pay");
-
-        // openLoading();
-
-        // $.ajax({
-        //     url: baseURL + "dashboard/orders/order-closing",
-        //     type: "POST",
-        //     headers: {
-        //         "X-CSRF-TOKEN": $('input[name="_token"]').val(),
-        //     },
-        //     success: function (response) {
-        //         closeLoading();
-
-        //         if (!response.status) {
-        //             swal({
-        //                 title: "Thông báo",
-        //                 text: response.message,
-        //                 icon: "warning",
-        //                 showCancelButton: false,
-        //             });
-        //             return;
-        //         }
-
-        //         swal({
-        //             title: "Thông báo",
-        //             text: response.message,
-        //             icon: "success",
-        //             showCancelButton: false,
-        //         }).then(function () {
-        //             window.location.reload();
-        //         });
-        //     },
-        // });
     });
 
+    // Handle radio button changes in payment modal
+    $(document).on("change", "input[name='pay_method']", function() {
+        // Hide all payment info
+        $(".pay-info").addClass("hide");
+        
+        // Show the selected payment info
+        if ($(this).val() === "vnpay") {
+            $("#vnpay-info").removeClass("hide");
+        }
+    });
+
+    // Handle payment button click
     $(document).on("click", "#btn-pay", function () {
         closeModal("modal-order-pay");
-
-        openLoading();
-
-        $.ajax({
-            url: baseURL + "dashboard/orders/order-closing",
-            type: "POST",
-            headers: {
-                "X-CSRF-TOKEN": $('input[name="_token"]').val(),
-            },
-            success: function (response) {
-                closeLoading();
-                if (!response.status) {
+        
+        const paymentMethod = $("input[name='pay_method']:checked").val();
+        
+        if (paymentMethod === "vnpay") {
+            // Get total amount from page
+            const totalAmount = $("#into_money").text().replace(/\D/g, "");
+            
+            openLoading();
+            // Redirect to VNPAY payment gateway
+            $.ajax({
+                url: baseURL + "dashboard/orders/vnpay-payment",
+                type: "POST",
+                data: {
+                    amount: totalAmount
+                },
+                headers: {
+                    "X-CSRF-TOKEN": $('input[name="_token"]').val(),
+                },
+                success: function (response) {
+                    closeLoading();
+                    
+                    if (!response.status) {
+                        swal({
+                            title: "Thông báo",
+                            text: response.message,
+                            icon: "warning",
+                            showCancelButton: false,
+                        });
+                        return;
+                    }
+                    
+                    // Redirect to VNPAY
+                    window.location.href = response.data.redirect_url;
+                },
+            });
+        } else {
+            // Process direct payment
+            openLoading();
+            
+            $.ajax({
+                url: baseURL + "dashboard/orders/order-closing",
+                type: "POST",
+                data: {
+                    payment_method: paymentMethod
+                },
+                headers: {
+                    "X-CSRF-TOKEN": $('input[name="_token"]').val(),
+                },
+                success: function (response) {
+                    closeLoading();
+                    if (!response.status) {
+                        swal({
+                            title: "Thông báo",
+                            text: response.message,
+                            icon: "warning",
+                            showCancelButton: false,
+                        });
+                        return;
+                    }
                     swal({
                         title: "Thông báo",
                         text: response.message,
-                        icon: "warning",
+                        icon: "success",
                         showCancelButton: false,
+                    }).then(function () {
+                        window.location.reload();
                     });
-                    return;
-                }
-                swal({
-                    title: "Thông báo",
-                    text: response.message,
-                    icon: "success",
-                    showCancelButton: false,
-                }).then(function () {
-                    window.location.reload();
-                });
-            },
-        });
+                },
+            });
+        }
     });
 
     $(document).on("click", "#btn-order-detail", function () {
@@ -2187,15 +2159,42 @@ $(document).ready(function () {
         });
     });
 
-    $(document).on('click', '#pay', function(event) {
-        
-        const value = $("#pay:checked").val();
+    // Hàm toàn cục để thêm sản phẩm vào giỏ hàng với số lượng tùy chọn
+    function addProductToCart(productId, quantity = 1) {
+        openLoading();
+        $.ajax({
+            url: baseURL + "dashboard/orders",
+            type: "POST",
+            data: {
+                product_id: productId,
+                quantity: quantity
+            },
+            headers: {
+                "X-CSRF-TOKEN": $('input[name="_token"]').val(),
+            },
+            success: function (response) {
+                closeLoading();
+                if (!response.status) {
+                    swal({
+                        title: "Thông báo",
+                        text: response.message,
+                        icon: "warning",
+                        showCancelButton: false,
+                    });
+                    return;
+                }
 
-        if (value == "bank") {
-            $(".pay-info").removeClass("hide");
-        }
-        else {
-            $(".pay-info").addClass("hide");
-        }
-    });
+                swal({
+                    title: "Thông báo",
+                    text: response.message,
+                    icon: "success",
+                    showCancelButton: false,
+                }).then(function () {
+                    if ($("#cart-count").length > 0) {
+                        $("#cart-count").html(response.data.count);
+                    }
+                });
+            },
+        });
+    }
 });

@@ -6,6 +6,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DiscountController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\VNPayController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -38,6 +39,9 @@ Route::get('/logout', [AccountController::class, 'logout'])->name('logout');
 
 // Search
 Route::get('/search', [ProductController::class, 'search'])->name('search');
+
+// Product Detail
+Route::get('/product/{slug}', [ProductController::class, 'detail'])->name('product.detail');
 
 // Category
 Route::get('/category', [CategoryController::class, 'index'])->name('category');
@@ -135,8 +139,14 @@ Route::group(['prefix' => 'dashboard', 'middleware' => 'm_api_guest'], function 
         Route::post('/review', [OrderController::class, 'API_review_order'])->name('guest.orders.review');
         Route::post('/review/get', [OrderController::class, 'API_get_review_order'])->name('guest.orders.get-order-review');
         Route::post('/cancel', [OrderController::class, 'API_order_cancel'])->name('guest.orders.cancel');
+        
+        // VNPAY Routes
+        Route::post('/vnpay-payment', [VNPayController::class, 'createPayment'])->name('dashboard.orders.vnpay_payment');
     });
 });
+
+// VNPAY Return URL - No authentication required for payment returns
+Route::get('/vnpay-return', [VNPayController::class, 'paymentReturn'])->name('vnpay.return');
 
 // Admin
 Route::group(['prefix' => 'admin', 'middleware' => 'm_api_admin'], function () {

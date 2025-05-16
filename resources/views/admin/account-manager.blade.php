@@ -62,9 +62,9 @@
                     <td>{{ $SHIPPERS->address }}</td>
                     <td>
                         @if ($SHIPPERS->locked == 0)
-                            <button id="btn-locked" class="btn" data-id="{{ $GUEST->id }}" data-status="0">Đang kích hoạt</button>
+                            <button id="btn-locked" class="btn" data-id="{{ $SHIPPERS->id }}" data-status="0">Đang kích hoạt</button>
                         @else
-                            <button id="btn-locked" class="btn" data-id="{{ $GUEST->id }}" data-status="1">Đã khóa</button>
+                            <button id="btn-locked" class="btn" data-id="{{ $SHIPPERS->id }}" data-status="1">Đã khóa</button>
                         @endif
                     </td>
                 </tr>
